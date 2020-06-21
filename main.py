@@ -7,9 +7,9 @@ class B(object):
         self.c = 'dsfsdfsdfsdf'
         self.d = 1003
 
-    @classmethod
-    def from_json(cls, data):
-        return cls(**data)
+    # @classmethod
+    # def from_json(cls, data):
+    #     return cls(**data)
 
 class A(object):
     def __init__(self):
@@ -17,10 +17,10 @@ class A(object):
         self.b = 100
         self.c = B()
 
-    @classmethod
-    def from_json(cls, data):
-        c = list(map(B.from_json, data["c"]))
-        return cls(c)
+    # @classmethod
+    # def from_json(cls, data):
+    #     c = list(map(B.from_json, data["c"]))
+    #     return cls(c)
 
 class MyDb:
     def __init__(self, machine_address, db_name, user, password, port):
@@ -53,15 +53,63 @@ def main():
 
     ret = db_obj.connect()
     ret = db_obj.insert('test1', {'s':'fsdfsdf', 'f': {'s':1, 'dfgd': 'sdfdsd0000'}})
-    print ret
+    # print(ret)
 
 if __name__ == "__main__":
     # main()
-    a = A()
-    print (json.dumps(a, lambda o: o.__dict__, sort_keys=True))
+    b = B()
+    j = json.dumps(b.__dict__)
+    # print('type: {}, data: {}'.format(type(j), j))
     
 
+    a = A()
+    j1 = json.dumps(a.__dict__, default=lambda o: o.__dict__)
+    print 'type: {}, data: {}'.format(type(j1), j1)
 
+
+
+    import requests
+
+    url = "http://petstore.swagger.io/v2/user/login?username=igala&password=12345678"
+
+    payload = {}
+    headers= {}
+
+    response = requests.request("GET", url, headers=headers, data = payload)
+
+    if not response.json:
+        print(response.text.encode('utf8'))
+    else:
+        print(response.json)
+
+    url = "http://petstore.swagger.io/v2/store/inventory"
+
+    payload = {}
+    headers = {
+    'Content-Type': 'application/json',
+    'api_key': 'special_key'
+    }
+
+    response = requests.request("GET", url, headers=headers, data = payload)
+    if not response.json:
+        print(response.text.encode('utf8'))
+    else:
+        print(response.json)
+
+
+
+
+    url = "http://petstore.swagger.io/v2/user/logout"
+
+    payload = {}
+    headers= {}
+
+    response = requests.request("GET", url, headers=headers, data = payload)
+
+    if not response.json:
+        print(response.text.encode('utf8'))
+    else:
+        print(response.json)
 
 
 # def test_db():
